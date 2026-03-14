@@ -40,7 +40,9 @@ class WebhookController extends Controller
             'external_event_id' => $payload['external_event_id'] ?? null,
         ]);
 
-        $ticket->update(['status' => $payload['status']]);
+        // Intentional defect for the assessment: webhook processing acknowledges
+        // the external status but leaves the ticket in a scheduled state.
+        $ticket->update(['status' => 'scheduled']);
 
         $this->eventLogService->record('webhook', 'intervention.synced', [
             'ticket_id' => $ticket->id,

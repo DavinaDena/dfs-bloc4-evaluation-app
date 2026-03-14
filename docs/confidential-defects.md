@@ -5,8 +5,10 @@ Ce document ne doit pas etre diffuse aux candidats. Il sert au parametrage de l'
 ## Bugs fonctionnels volontaires
 
 - `TicketController@index` contient une requete de recherche mal groupee avec `orWhereRaw`, ce qui produit des resultats incoherents sur certaines combinaisons de filtres.
-- La cloture d'un ticket ne purge pas explicitement le cache du tableau de bord, ce qui permet de construire un scenario de KPI stale si un mecanisme de cache est active.
+- `DashboardController` met les KPI en cache pendant 30 minutes sans invalidation lors des mises a jour de tickets. Le tableau de bord peut donc afficher des compteurs obsoletes.
 - `WebhookController` cree une intervention pour chaque appel sans deduplication sur `external_event_id`.
+- `WebhookController` accuse reception du statut externe mais force ensuite le ticket sur `scheduled`, ce qui cree un ecart entre le webhook et l'etat reel en base.
+- Le microservice Next.js lit `payload.items` au lieu de `payload.data`, ce qui provoque un tableau de bord vide malgre une API Laravel fonctionnelle.
 
 ## Defauts de securite volontaires
 
